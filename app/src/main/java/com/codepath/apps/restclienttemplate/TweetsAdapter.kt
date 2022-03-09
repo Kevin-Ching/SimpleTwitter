@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codepath.apps.restclienttemplate.models.Tweet
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+
+private const val TAG = "TweetsAdapter"
 
 class TweetsAdapter(val tweets: ArrayList<Tweet>) : RecyclerView.Adapter<TweetsAdapter.ViewHolder>() {
 
@@ -29,6 +36,7 @@ class TweetsAdapter(val tweets: ArrayList<Tweet>) : RecyclerView.Adapter<TweetsA
         // Set item views based on data model
         holder.tvUserName.text = tweet.user?.name
         holder.tvTweetBody.text = tweet.body
+        holder.tvTimeAgo.text = getRelativeTimeAgo(tweet.createdAt)
 
         Glide.with(holder.itemView).load(tweet.user?.publicImageUrl).into(holder.ivProfileImage)
     }
@@ -52,5 +60,41 @@ class TweetsAdapter(val tweets: ArrayList<Tweet>) : RecyclerView.Adapter<TweetsA
         val ivProfileImage = itemView.findViewById<ImageView>(R.id.ivProfileImage)
         val tvUserName = itemView.findViewById<TextView>(R.id.tvUsername)
         val tvTweetBody = itemView.findViewById<TextView>(R.id.tvTweetBody)
+        val tvTimeAgo = itemView.findViewById<TextView>(R.id.tvTimeAgo)
+    }
+
+    private val SECOND_MILLIS = 1000
+    private val MINUTE_MILLIS = 60 * SECOND_MILLIS
+    private val HOUR_MILLIS = 60 * MINUTE_MILLIS
+    private val DAY_MILLIS = 24 * HOUR_MILLIS
+
+    fun getRelativeTimeAgo(rawJsonDate: String?): String? {
+        val twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy"
+        val sf = SimpleDateFormat(twitterFormat, Locale.ENGLISH)
+        sf.setLenient(true)
+        try {
+            val time: Long = sf.parse(rawJsonDate).getTime()
+            val now = System.currentTimeMillis()
+            val diff = now - time
+            return if (diff < MINUTE_MILLIS) {
+                "just now"
+            } else if (diff < 2 * MINUTE_MILLIS) {
+                "a minute ago"
+            } else if (diff < 50 * MINUTE_MILLIS) {
+                (diff / MINUTE_MILLIS).toString() + "m"
+            } else if (diff < 90 * MINUTE_MILLIS) {
+                "an hour ago"
+            } else if (diff < 24 * HOUR_MILLIS) {
+                (diff / HOUR_MILLIS).toString() + "h"
+            } else if (diff < 48 * HOUR_MILLIS) {
+                "yesterday"
+            } else {
+                (diff / DAY_MILLIS).toString() + "d"
+            }
+        } catch (e: ParseException) {
+            Log.i(TAG, "getRelativeTimeAgo failed")
+            e.printStackTrace()
+        }
+        return ""
     }
 }

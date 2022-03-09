@@ -37,4 +37,13 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constrainedWidth="true"
         tools:text="This is a really really really really really long tweet to test our layout!" />
+
+    <TextView
+        android:id="@+id/tvTimeAgo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1h" />
 </androidx.constraintlayout.widget.ConstraintLayout>

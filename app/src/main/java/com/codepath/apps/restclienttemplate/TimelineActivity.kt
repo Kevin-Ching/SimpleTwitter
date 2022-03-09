@@ -21,6 +21,10 @@ class TimelineActivity : AppCompatActivity() {
 
     lateinit var swipeContainer: SwipeRefreshLayout
 
+    lateinit var scrollListener: EndlessRecyclerViewScrollListener
+
+    var minId: Long = 0
+
     val tweets = ArrayList<Tweet>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +51,16 @@ class TimelineActivity : AppCompatActivity() {
         rvTweets = findViewById(R.id.rvTweets)
         adapter = TweetsAdapter(tweets)
 
-        rvTweets.layoutManager = LinearLayoutManager(this)
+        val linearLayoutManager = LinearLayoutManager(this)
+        rvTweets.layoutManager = linearLayoutManager
         rvTweets.adapter = adapter
+
+        rvTweets.addOnScrollListener(object: EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                loadMoreData()
+            }
+
+        })
 
         populateHomeTimeline()
     }
@@ -64,11 +76,45 @@ class TimelineActivity : AppCompatActivity() {
                 try {
                     // Clear out our currently fetched tweets
                     adapter.clear()
-                    val listOfNewTweetsReceived = Tweet.fromJsonArray(jsonArray)
+                    val returnFromJsonArray = Tweet.fromJsonArray(jsonArray)
+                    val listOfNewTweetsReceived = returnFromJsonArray.first
+                    minId = returnFromJsonArray.second
                     tweets.addAll(listOfNewTweetsReceived)
                     adapter.notifyDataSetChanged()
                     // Now we call setRefreshing(false) to signal refresh has finished
                     swipeContainer.setRefreshing(false)
+                } catch (e: JSONException) {
+                    Log.e(TAG, "JSON Exception $e")
+                }
+
+            }
+
+            override fun onFailure(
+                statusCode: Int,
+                headers: Headers?,
+                response: String?,
+                throwable: Throwable?
+            ) {
+                Log.i(TAG, "onFailure $statusCode $response")
+            }
+
+        })
+    }
+
+    fun loadMoreData() {
+        client.getNextPageOfTweets(minId - 1, object : JsonHttpResponseHandler() {
+
+            override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
+                Log.i(TAG, "onSuccess!")
+
+                val jsonArray = json.jsonArray
+
+                try {
+                    val returnFromJsonArray = Tweet.fromJsonArray(jsonArray)
+                    val listOfNewTweetsReceived = returnFromJsonArray.first
+                    minId = returnFromJsonArray.second
+                    tweets.addAll(listOfNewTweetsReceived)
+                    adapter.notifyDataSetChanged()
                 } catch (e: JSONException) {
                     Log.e(TAG, "JSON Exception $e")
                 }
