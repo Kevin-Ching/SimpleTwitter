@@ -35,6 +35,7 @@ class TweetsAdapter(val tweets: ArrayList<Tweet>) : RecyclerView.Adapter<TweetsA
 
         // Set item views based on data model
         holder.tvUserName.text = tweet.user?.name
+        holder.tvUserHandle.text = "@" + tweet.user?.screenName
         holder.tvTweetBody.text = tweet.body
         holder.tvTimeAgo.text = getRelativeTimeAgo(tweet.createdAt)
 
@@ -61,6 +62,7 @@ class TweetsAdapter(val tweets: ArrayList<Tweet>) : RecyclerView.Adapter<TweetsA
         val tvUserName = itemView.findViewById<TextView>(R.id.tvUsername)
         val tvTweetBody = itemView.findViewById<TextView>(R.id.tvTweetBody)
         val tvTimeAgo = itemView.findViewById<TextView>(R.id.tvTimeAgo)
+        val tvUserHandle = itemView.findViewById<TextView>(R.id.tvUserHandle)
     }
 
     private val SECOND_MILLIS = 1000
