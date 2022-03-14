@@ -9,6 +9,8 @@ class Tweet {
     var createdAt: String = ""
     var user: User? = null
     var id: Long = 0
+    val mediaList: ArrayList<String> = ArrayList()
+    var mediaListType: String = ""
 
     companion object {
         fun fromJson(jsonObject: JSONObject) : Tweet {
@@ -17,6 +19,13 @@ class Tweet {
             tweet.createdAt = jsonObject.getString("created_at")
             tweet.user = User.fromJson(jsonObject.getJSONObject("user"))
             tweet.id = jsonObject.getLong("id")
+            if (jsonObject.has("extended_entities")) {
+                val mediaJsonArray = jsonObject.getJSONObject("extended_entities").getJSONArray("media")
+                tweet.mediaListType = mediaJsonArray.getJSONObject(0).getString("type")
+                for (i in 0 until mediaJsonArray.length()) {
+                    tweet.mediaList.add(mediaJsonArray.getJSONObject(i).getString("media_url_https"))
+                }
+            }
             return tweet
         }
 

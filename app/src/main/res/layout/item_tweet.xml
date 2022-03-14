@@ -10,7 +10,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
@@ -63,9 +63,50 @@
         tools:text="\@warriors" />
 
     <View style="@style/Divider"
+        android:id="@+id/divider"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTweetBody"
+        app:layout_constraintTop_toBottomOf="@+id/ivEmbed3"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivEmbed1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        app:layout_constraintStart_toStartOf="@+id/tvTweetBody"
+        app:layout_constraintEnd_toStartOf="@id/ivEmbed2"
+        app:layout_constraintTop_toBottomOf="@+id/tvTweetBody"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ivEmbed2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        app:layout_constraintStart_toEndOf="@+id/ivEmbed1"
+        app:layout_constraintEnd_toEndOf="@id/tvTweetBody"
+        app:layout_constraintTop_toBottomOf="@+id/tvTweetBody"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ivEmbed3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        app:layout_constraintStart_toStartOf="@+id/tvTweetBody"
+        app:layout_constraintEnd_toStartOf="@id/ivEmbed4"
+        app:layout_constraintTop_toBottomOf="@+id/ivEmbed1"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ivEmbed4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        app:layout_constraintStart_toEndOf="@+id/ivEmbed3"
+        app:layout_constraintEnd_toEndOf="@id/tvTweetBody"
+        app:layout_constraintTop_toBottomOf="@+id/ivEmbed2"
+        tools:srcCompat="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>

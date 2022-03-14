@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codepath.apps.restclienttemplate.models.Tweet
@@ -40,6 +42,20 @@ class TweetsAdapter(val tweets: ArrayList<Tweet>) : RecyclerView.Adapter<TweetsA
         holder.tvTimeAgo.text = getRelativeTimeAgo(tweet.createdAt)
 
         Glide.with(holder.itemView).load(tweet.user?.publicImageUrl).into(holder.ivProfileImage)
+
+//        if (tweet.mediaList.size == 1) {
+//            val parent = holder.ivEmbed1.parent as ConstraintLayout
+//            for (i in 1 until holder.ivEmbedList.size) {
+//                parent.removeView(holder.ivEmbedList[i])
+//            }
+//            val constraintSet = ConstraintSet()
+//            constraintSet.clone(parent)
+//            constraintSet.connect(holder.ivEmbed1.id, ConstraintSet.RIGHT, holder.tvTweetBody.id, ConstraintSet.RIGHT)
+//            constraintSet.applyTo(parent)
+//        }
+        for (i in 0 until tweet.mediaList.size) {
+            Glide.with(holder.itemView).load(tweet.mediaList[i]).into(holder.ivEmbedList[i])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -63,6 +79,11 @@ class TweetsAdapter(val tweets: ArrayList<Tweet>) : RecyclerView.Adapter<TweetsA
         val tvTweetBody = itemView.findViewById<TextView>(R.id.tvTweetBody)
         val tvTimeAgo = itemView.findViewById<TextView>(R.id.tvTimeAgo)
         val tvUserHandle = itemView.findViewById<TextView>(R.id.tvUserHandle)
+        val ivEmbed1 = itemView.findViewById<ImageView>(R.id.ivEmbed1)
+        val ivEmbed2 = itemView.findViewById<ImageView>(R.id.ivEmbed2)
+        val ivEmbed3 = itemView.findViewById<ImageView>(R.id.ivEmbed3)
+        val ivEmbed4 = itemView.findViewById<ImageView>(R.id.ivEmbed4)
+        val ivEmbedList = mutableListOf<ImageView>(ivEmbed1, ivEmbed2, ivEmbed3, ivEmbed4)
     }
 
     private val SECOND_MILLIS = 1000

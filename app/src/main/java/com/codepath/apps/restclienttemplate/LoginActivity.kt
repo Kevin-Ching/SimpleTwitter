@@ -38,8 +38,8 @@ class LoginActivity : OAuthLoginActionBarActivity<TwitterClient>() {
 
         Log.i("Kevin", "Logged in successfully!")
 
-         val i = Intent(this, TimelineActivity::class.java)
-         startActivity(i)
+        val i = Intent(this, TimelineActivity::class.java)
+        startActivity(i)
     }
 
     // OAuth authentication flow failed, handle the error
